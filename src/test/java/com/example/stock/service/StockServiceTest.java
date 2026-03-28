@@ -23,9 +23,11 @@ class StockServiceTest {
     @Autowired
     private StockRepository stockRepository;
 
+    private Stock savedStock;
+
     @BeforeEach
     void beforeEach() {
-        stockRepository.saveAndFlush(new Stock(1L, 100L));
+        savedStock = stockRepository.saveAndFlush(new Stock(1L, 100L));
     }
 
     @AfterEach
@@ -39,10 +41,10 @@ class StockServiceTest {
         Long decreaseQuantity = 1L;
 
         //when
-        stockService.decrease(1L, decreaseQuantity);
+        stockService.decrease(savedStock.getId(), decreaseQuantity);
 
         //then
-        Stock stock = stockRepository.findById(1L).orElseThrow();
+        Stock stock = stockRepository.findById(savedStock.getId()).orElseThrow();
         assertThat(stock.getQuantity()).isEqualTo(99);
     }
 
@@ -57,7 +59,7 @@ class StockServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    stockService.decrease(1L, 1L);
+                    stockService.decrease(savedStock.getId(), 1L);
                 } finally {
                     latch.countDown();
                 }
@@ -66,7 +68,7 @@ class StockServiceTest {
         latch.await();
 
         // then
-        Stock stock = stockRepository.findById(1L).orElseThrow();
+        Stock stock = stockRepository.findById(savedStock.getId()).orElseThrow();
         assertThat(stock.getQuantity()).isZero();
     }
 }

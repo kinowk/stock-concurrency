@@ -16,6 +16,14 @@ public class StockRepository {
         return stockJpaRepository.findById(id);
     }
 
+    public Optional<Stock> findByIdForUpdate(Long id) {
+        return stockJpaRepository.findByIdForUpdate(id);
+    }
+
+    public Stock save(Stock stock) {
+        return stockJpaRepository.save(stock);
+    }
+
     public Stock saveAndFlush(Stock stock) {
         return stockJpaRepository.saveAndFlush(stock);
     }

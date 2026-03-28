@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class StockServiceTest {
 
     @Autowired
-    private StockService stockService;
+    private PessimisticLockStockService stockService;
 
     @Autowired
     private StockRepository stockRepository;
@@ -55,11 +55,13 @@ class StockServiceTest {
 
         // when
         for (int i = 0; i < threadCount; i++) {
-            try {
-                executorService.execute(() -> stockService.decrease(1L, 1L));
-            } finally {
-                latch.countDown();
-            }
+            executorService.execute(() -> {
+                try {
+                    stockService.decrease(1L, 1L);
+                } finally {
+                    latch.countDown();
+                }
+            });
         }
         latch.await();
 

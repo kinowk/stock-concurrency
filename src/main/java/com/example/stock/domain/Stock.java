@@ -2,9 +2,11 @@ package com.example.stock.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Stock {
 
@@ -19,6 +21,8 @@ public class Stock {
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
+    @Version
+    private Long version;
 
     public Stock(Long productId, Long quantity) {
         if (quantity < 0) {

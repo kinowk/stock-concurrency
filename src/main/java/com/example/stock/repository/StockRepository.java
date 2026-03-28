@@ -20,6 +20,10 @@ public class StockRepository {
         return stockJpaRepository.findByIdForUpdate(id);
     }
 
+    public Optional<Stock> findByIdWithOptimisticLock(Long id) {
+        return stockJpaRepository.findByIdWithOptimisticLock(id);
+    }
+
     public Stock save(Stock stock) {
         return stockJpaRepository.save(stock);
     }
